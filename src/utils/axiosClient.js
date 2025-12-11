@@ -1,15 +1,15 @@
 import axios from "axios"
 
 const axiosClient = axios.create({
-    // baseURL:'http://localhost:3000',
-    baseURL:'https://codeshaala-backend.vercel.app',
-    // baseURL: isLocalhost 
-    //     ? "http://localhost:3000" 
-    //     : "https://code-shaala-backend.vercel.app",
-    withCredentials: true,
-    headers: {
-        'Content-Type': 'application/json'
-    }
+  // baseURL:'http://localhost:3000',
+  baseURL: 'https://codearena-backend-047h.onrender.com',
+  // baseURL: isLocalhost 
+  //     ? "http://localhost:3000" 
+  //     : "https://code-shaala-backend.vercel.app",
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json'
+  }
 });
 axiosClient.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -22,4 +22,3 @@ axiosClient.interceptors.request.use((config) => {
 
 export default axiosClient;
 
-    
