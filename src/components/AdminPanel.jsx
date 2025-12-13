@@ -47,6 +47,12 @@ function AdminPanel() {
   } = useForm({
     resolver: zodResolver(problemSchema),
     defaultValues: {
+      visibleTestCases: [
+        { input: '', output: '', explanation: '' }
+      ],
+      hiddenTestCases: [
+        { input: '', output: '' }
+      ],
       startCode: [
         { language: 'C++', initialCode: '' },
         { language: 'Java', initialCode: '' },

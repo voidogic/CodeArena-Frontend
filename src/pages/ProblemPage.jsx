@@ -7,10 +7,53 @@ import SubmissionHistory from "../components/SubmissionHistory"
 import ChatAi from '../components/ChatAi';
 import Editorial from '../components/Editorial';
 
+
+
+const isBase64 = (str = "") => {
+  if (!str || typeof str !== "string") return false;
+
+  // must be multiple of 4
+  if (str.length % 4 !== 0) return false;
+
+  // strict base64 check
+  const base64Regex =
+    /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
+
+  return base64Regex.test(str);
+};
+
+
+
+
+const decodeBase64 = (str = "") => {
+
+  try {
+
+    if (!isBase64(str)) return str; // already plain text
+
+
+
+    const binary = atob(str);
+
+    const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+
+    return new TextDecoder("utf-8").decode(bytes);
+
+  } catch {
+
+    return str;
+
+  }
+
+};
+
+
+
+
 const langMap = {
-        cpp: 'C++',
-        java: 'Java',
-        javascript: 'JavaScript'
+  cpp: 'C++',
+  java: 'Java',
+  javascript: 'JavaScript'
 };
 
 
@@ -24,25 +67,25 @@ const ProblemPage = () => {
   const [activeLeftTab, setActiveLeftTab] = useState('description');
   const [activeRightTab, setActiveRightTab] = useState('code');
   const editorRef = useRef(null);
-  let {problemId}  = useParams();
+  let { problemId } = useParams();
 
   const { handleSubmit } = useForm();
 
- useEffect(() => {
+  useEffect(() => {
     const fetchProblem = async () => {
       setLoading(true);
       try {
-        
+
         const response = await axiosClient.get(`/problem/problemById/${problemId}`);
-       
-        
+
+
         const initialCode = response.data.startCode.find(sc => sc.language === langMap[selectedLanguage]).initialCode;
 
         setProblem(response.data);
-        
+
         setCode(initialCode);
-        setLoading(false); 
-         
+        setLoading(false);
+
       } catch (error) {
         console.error('Error fetching problem:', error);
         setLoading(false);
@@ -75,7 +118,7 @@ const ProblemPage = () => {
   const handleRun = async () => {
     setLoading(true);
     setRunResult(null);
-    
+
     try {
       const response = await axiosClient.post(`/submission/run/${problemId}`, {
         code,
@@ -85,7 +128,7 @@ const ProblemPage = () => {
       setRunResult(response.data);
       setLoading(false);
       setActiveRightTab('testcase');
-      
+
     } catch (error) {
       console.error('Error running code:', error);
       setRunResult({
@@ -100,17 +143,17 @@ const ProblemPage = () => {
   const handleSubmitCode = async () => {
     setLoading(true);
     setSubmitResult(null);
-    
+
     try {
-        const response = await axiosClient.post(`/submission/submit/${problemId}`, {
-        code:code,
+      const response = await axiosClient.post(`/submission/submit/${problemId}`, {
+        code: code,
         language: selectedLanguage
       });
 
-       setSubmitResult(response.data);
-       setLoading(false);
-       setActiveRightTab('result');
-      
+      setSubmitResult(response.data);
+      setLoading(false);
+      setActiveRightTab('result');
+
     } catch (error) {
       console.error('Error submitting code:', error);
       setSubmitResult(null);
@@ -151,32 +194,32 @@ const ProblemPage = () => {
       <div className="w-1/2 flex flex-col border-r border-base-300">
         {/* Left Tabs */}
         <div className="tabs tabs-bordered bg-base-200 px-4">
-          <button 
+          <button
             className={`tab ${activeLeftTab === 'description' ? 'tab-active' : ''}`}
             onClick={() => setActiveLeftTab('description')}
           >
             Description
           </button>
-          <button 
+          <button
             className={`tab ${activeLeftTab === 'editorial' ? 'tab-active' : ''}`}
             onClick={() => setActiveLeftTab('editorial')}
           >
             Editorial
           </button>
-          <button 
+          <button
             className={`tab ${activeLeftTab === 'solutions' ? 'tab-active' : ''}`}
             onClick={() => setActiveLeftTab('solutions')}
           >
             Solutions
           </button>
-          <button 
+          <button
             className={`tab ${activeLeftTab === 'submissions' ? 'tab-active' : ''}`}
             onClick={() => setActiveLeftTab('submissions')}
           >
             Submissions
           </button>
 
-          <button 
+          <button
             className={`tab ${activeLeftTab === 'chatAI' ? 'tab-active' : ''}`}
             onClick={() => setActiveLeftTab('chatAI')}
           >
@@ -213,9 +256,9 @@ const ProblemPage = () => {
                         <div key={index} className="bg-base-200 p-4 rounded-lg">
                           <h4 className="font-semibold mb-2">Example {index + 1}:</h4>
                           <div className="space-y-2 text-sm font-mono">
-                            <div><strong>Input:</strong> {example.input}</div>
-                            <div><strong>Output:</strong> {example.output}</div>
-                            <div><strong>Explanation:</strong> {example.explanation}</div>
+                            <div><strong>Input:</strong>{" "} {decodeBase64(example.input)}</div>
+                            <div><strong>Output:</strong>{" "} {decodeBase64(example.output)}</div>
+                            <div><strong>Explanation:</strong>{" "} {example.explanation}</div>
                           </div>
                         </div>
                       ))}
@@ -228,7 +271,7 @@ const ProblemPage = () => {
                 <div className="prose max-w-none">
                   <h2 className="text-xl font-bold mb-4">Editorial</h2>
                   <div className="whitespace-pre-wrap text-sm leading-relaxed">
-                    <Editorial secureUrl={problem.secureUrl} thumbnailUrl={problem.thumbnailUrl} duration=  {problem.duration}/>
+                    <Editorial secureUrl={problem.secureUrl} thumbnailUrl={problem.thumbnailUrl} duration={problem.duration} />
                   </div>
                 </div>
               )}
@@ -279,19 +322,19 @@ const ProblemPage = () => {
       <div className="w-1/2 flex flex-col">
         {/* Right Tabs */}
         <div className="tabs tabs-bordered bg-base-200 px-4">
-          <button 
+          <button
             className={`tab ${activeRightTab === 'code' ? 'tab-active' : ''}`}
             onClick={() => setActiveRightTab('code')}
           >
             Code
           </button>
-          <button 
+          <button
             className={`tab ${activeRightTab === 'testcase' ? 'tab-active' : ''}`}
             onClick={() => setActiveRightTab('testcase')}
           >
             Testcase
           </button>
-          <button 
+          <button
             className={`tab ${activeRightTab === 'result' ? 'tab-active' : ''}`}
             onClick={() => setActiveRightTab('result')}
           >
@@ -353,7 +396,7 @@ const ProblemPage = () => {
               {/* Action Buttons */}
               <div className="p-4 border-t border-base-300 flex justify-between">
                 <div className="flex gap-2">
-                  <button 
+                  <button
                     className="btn btn-ghost btn-sm"
                     onClick={() => setActiveRightTab('testcase')}
                   >
@@ -389,16 +432,16 @@ const ProblemPage = () => {
                     {runResult.success ? (
                       <div>
                         <h4 className="font-bold">✅ All test cases passed!</h4>
-                        <p className="text-sm mt-2">Runtime: {runResult.runtime+" sec"}</p>
-                        <p className="text-sm">Memory: {runResult.memory+" KB"}</p>
-                        
+                        <p className="text-sm mt-2">Runtime: {runResult.runtime + " sec"}</p>
+                        <p className="text-sm">Memory: {runResult.memory + " KB"}</p>
+
                         <div className="mt-4 space-y-2">
                           {runResult.testCases.map((tc, i) => (
                             <div key={i} className="bg-base-100 p-3 rounded text-xs">
                               <div className="font-mono">
-                                <div><strong>Input:</strong> {tc.stdin}</div>
-                                <div><strong>Expected:</strong> {tc.expected_output}</div>
-                                <div><strong>Output:</strong> {tc.stdout}</div>
+                                <div><strong>Input:</strong> {decodeBase64(tc.stdin)}</div>
+                                <div><strong>Expected:</strong> {decodeBase64(tc.expected_output)}</div>
+                                <div><strong>Output:</strong> {decodeBase64(tc.stdout)}</div>
                                 <div className={'text-green-600'}>
                                   {'✓ Passed'}
                                 </div>
@@ -414,11 +457,11 @@ const ProblemPage = () => {
                           {runResult.testCases.map((tc, i) => (
                             <div key={i} className="bg-base-100 p-3 rounded text-xs">
                               <div className="font-mono">
-                                <div><strong>Input:</strong> {tc.stdin}</div>
-                                <div><strong>Expected:</strong> {tc.expected_output}</div>
-                                <div><strong>Output:</strong> {tc.stdout}</div>
-                                <div className={tc.status_id==3 ? 'text-green-600' : 'text-red-600'}>
-                                  {tc.status_id==3 ? '✓ Passed' : '✗ Failed'}
+                                <div><strong>Input:</strong> {decodeBase64(tc.stdin)}</div>
+                                <div><strong>Expected:</strong> {decodeBase64(tc.expected_output)}</div>
+                                <div><strong>Output:</strong> {decodeBase64(tc.stdout)}</div>
+                                <div className={tc.status_id == 3 ? 'text-green-600' : 'text-red-600'}>
+                                  {tc.status_id == 3 ? '✓ Passed' : '✗ Failed'}
                                 </div>
                               </div>
                             </div>
