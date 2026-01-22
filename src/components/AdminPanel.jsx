@@ -9,7 +9,34 @@ const problemSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().min(1, 'Description is required'),
   difficulty: z.enum(['easy', 'medium', 'hard']),
-  tags: z.enum(['array', 'linkedList', 'graph', 'dp']),
+  tags: z.enum([
+    'array',
+    'string',
+    'linked_list',
+    'stack',
+    'queue',
+    'hash_table',
+    'tree',
+    'binary_search_tree',
+    'heap',
+    'graph',
+    'trie',
+    'dynamic_programming',
+    'backtracking',
+    'greedy',
+    'divide_and_conquer',
+    'bit_manipulation',
+    'two_pointers',
+    'sliding_window',
+    'sorting',
+    'searching',
+    'recursion',
+    'math',
+    'matrix',
+    'union_find',
+    'segment_tree',
+    'binary_indexed_tree'
+  ],),
   visibleTestCases: z.array(
     z.object({
       input: z.string().min(1, 'Input is required'),
@@ -159,10 +186,36 @@ function AdminPanel() {
                   {...register('tags')}
                   className={`select select-bordered w-full ${errors.tags ? 'select-error' : ''}`}
                 >
-                  <option value="array">Array</option>
+                  {/* <option value="array">Array</option>
                   <option value="linkedList">Linked List</option>
                   <option value="graph">Graph</option>
-                  <option value="dp">DP</option>
+                  <option value="dp">DP</option> */}
+                  <option value="array">Array</option>
+                  <option value="string">String</option>
+                  <option value="linked_list">Linked List</option>
+                  <option value="stack">Stack</option>
+                  <option value="queue">Queue</option>
+                  <option value="hash_table">Hash Table</option>
+                  <option value="tree">Tree</option>
+                  <option value="binary_search_tree">Binary Search Tree</option>
+                  <option value="heap">Heap</option>
+                  <option value="graph">Graph</option>
+                  <option value="trie">Trie</option>
+                  <option value="dynamic_programming">Dynamic Programming</option>
+                  <option value="backtracking">Backtracking</option>
+                  <option value="greedy">Greedy</option>
+                  <option value="divide_and_conquer">Divide and Conquer</option>
+                  <option value="bit_manipulation">Bit Manipulation</option>
+                  <option value="two_pointers">Two Pointers</option>
+                  <option value="sliding_window">Sliding Window</option>
+                  <option value="sorting">Sorting</option>
+                  <option value="searching">Searching</option>
+                  <option value="recursion">Recursion</option>
+                  <option value="math">Math</option>
+                  <option value="matrix">Matrix</option>
+                  <option value="union_find">Union Find</option>
+                  <option value="segment_tree">Segment Tree</option>
+                  <option value="binary_indexed_tree">Binary Indexed Tree</option>
                 </select>
               </div>
             </div>
