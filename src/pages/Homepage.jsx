@@ -12,7 +12,7 @@ function Homepage() {
   const [filters, setFilters] = useState({
     difficulty: 'all',
     tag: 'all',
-    status: 'all' 
+    status: 'all'
   });
 
   useEffect(() => {
@@ -46,8 +46,8 @@ function Homepage() {
   const filteredProblems = problems.filter(problem => {
     const difficultyMatch = filters.difficulty === 'all' || problem.difficulty === filters.difficulty;
     const tagMatch = filters.tag === 'all' || problem.tags === filters.tag;
-    const statusMatch = filters.status === 'all' || 
-                      solvedProblems.some(sp => sp._id === problem._id);
+    const statusMatch = filters.status === 'all' ||
+      solvedProblems.some(sp => sp._id === problem._id);
     return difficultyMatch && tagMatch && statusMatch;
   });
 
@@ -63,9 +63,9 @@ function Homepage() {
             <div tabIndex={0} className="btn btn-ghost">
               {user?.firstName}
             </div>
-             <ul className="mt-3 p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
+            <ul className="mt-3 p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
               <li><button onClick={handleLogout}>Logout</button></li>
-              {user.role=='admin'&&<li><NavLink to="/admin">Admin</NavLink></li>}
+              {user.role == 'admin' && <li><NavLink to="/admin">Admin</NavLink></li>}
             </ul>
           </div>
         </div>
@@ -76,19 +76,19 @@ function Homepage() {
         {/* Filters */}
         <div className="flex flex-wrap gap-4 mb-6">
           {/* New Status Filter */}
-          <select 
+          <select
             className="select select-bordered"
             value={filters.status}
-            onChange={(e) => setFilters({...filters, status: e.target.value})}
+            onChange={(e) => setFilters({ ...filters, status: e.target.value })}
           >
             <option value="all">All Problems</option>
             <option value="solved">Solved Problems</option>
           </select>
 
-          <select 
+          <select
             className="select select-bordered"
             value={filters.difficulty}
-            onChange={(e) => setFilters({...filters, difficulty: e.target.value})}
+            onChange={(e) => setFilters({ ...filters, difficulty: e.target.value })}
           >
             <option value="all">All Difficulties</option>
             <option value="easy">Easy</option>
@@ -96,16 +96,42 @@ function Homepage() {
             <option value="hard">Hard</option>
           </select>
 
-          <select 
+          <select
             className="select select-bordered"
             value={filters.tag}
-            onChange={(e) => setFilters({...filters, tag: e.target.value})}
+            onChange={(e) => setFilters({ ...filters, tag: e.target.value })}
           >
-            <option value="all">All Tags</option>
+            {/* <option value="all">All Tags</option>
             <option value="array">Array</option>
             <option value="linkedList">Linked List</option>
             <option value="graph">Graph</option>
-            <option value="dp">DP</option>
+            <option value="dp">DP</option> */}
+            <option value="array">Array</option>
+            <option value="string">String</option>
+            <option value="linked_list">Linked List</option>
+            <option value="stack">Stack</option>
+            <option value="queue">Queue</option>
+            <option value="hash_table">Hash Table</option>
+            <option value="tree">Tree</option>
+            <option value="binary_search_tree">Binary Search Tree</option>
+            <option value="heap">Heap</option>
+            <option value="graph">Graph</option>
+            <option value="trie">Trie</option>
+            <option value="dynamic_programming">Dynamic Programming</option>
+            <option value="backtracking">Backtracking</option>
+            <option value="greedy">Greedy</option>
+            <option value="divide_and_conquer">Divide and Conquer</option>
+            <option value="bit_manipulation">Bit Manipulation</option>
+            <option value="two_pointers">Two Pointers</option>
+            <option value="sliding_window">Sliding Window</option>
+            <option value="sorting">Sorting</option>
+            <option value="searching">Searching</option>
+            <option value="recursion">Recursion</option>
+            <option value="math">Math</option>
+            <option value="matrix">Matrix</option>
+            <option value="union_find">Union Find</option>
+            <option value="segment_tree">Segment Tree</option>
+            <option value="binary_indexed_tree">Binary Indexed Tree</option>
           </select>
         </div>
 
@@ -129,7 +155,7 @@ function Homepage() {
                     </div>
                   )}
                 </div>
-                
+
                 <div className="flex gap-2">
                   <div className={`badge ${getDifficultyBadgeColor(problem.difficulty)}`}>
                     {problem.difficulty}
